@@ -75,7 +75,7 @@ public class ShipDTO {
     private List<String> getPhoto(Ship ship) throws IOException {
         List<String> photos = new ArrayList<>();
         for(Photo p: ship.getPhotos()){
-            String pathFile = "../frontend/src/components/images/" + p.getPath();
+            String pathFile = "./src/main/frontend/src/components/images/" + p.getPath();
             byte[] bytes = Files.readAllBytes(Paths.get(pathFile));
             String photoData = Base64.getEncoder().encodeToString(bytes);
             photos.add(photoData);

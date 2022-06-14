@@ -59,7 +59,7 @@ public class PhotoServiceImpl implements PhotoService {
     }
     @Override
     public String savePhotoInFileSystem(byte[] bytes, String ownerEmail, int counter) throws IOException {
-        String folder = "../frontend/src/components/images/";
+        String folder = "./src/main/frontend/src/components/images/";
         LocalDateTime uniqueTime = LocalDateTime.now();
         DateTimeFormatter formater = DateTimeFormatter.ofPattern("ddMMyyyyHHmmss");
         String photoName = ownerEmail + "_" + uniqueTime.format(formater) + counter + ".jpg";

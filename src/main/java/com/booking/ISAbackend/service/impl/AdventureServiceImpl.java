@@ -246,7 +246,7 @@ public class AdventureServiceImpl implements AdventureService {
     private List<byte[]> convertPhotosToBytes(List<Photo> photos) throws IOException {
         List<byte[]> photosInBytes = new ArrayList<byte[]>();
         for (Photo p : photos) {
-            String folder = "../frontend/src/components/images/";
+            String folder = "./src/main/frontend/src/components/images/";
             Path path = Paths.get(folder + p.getPath());
             BufferedImage image = ImageIO.read(new FileInputStream(path.toString()));
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -303,7 +303,7 @@ public class AdventureServiceImpl implements AdventureService {
     private List<String> getPhoto(Adventure a) throws IOException {
         List<String> photos = new ArrayList<>();
         for(Photo p: a.getPhotos()){
-            String pathFile = "../frontend/src/components/images/" + p.getPath();
+            String pathFile = "./src/main/frontend/src/components/images/" + p.getPath();
             byte[] bytes = Files.readAllBytes(Paths.get(pathFile));
             String photoData = Base64.getEncoder().encodeToString(bytes);
             photos.add(photoData);

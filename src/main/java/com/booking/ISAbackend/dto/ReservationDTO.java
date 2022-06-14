@@ -93,7 +93,7 @@ public class ReservationDTO {
     }
 
     private String convertPhoto(String photoName) throws IOException {
-        String pathFile = "../frontend/src/components/images/" + photoName;
+        String pathFile = "./src/main/frontend/src/components/images/" + photoName;
         byte[] bytes = Files.readAllBytes(Paths.get(pathFile));
         String photoData = Base64.getEncoder().encodeToString(bytes);
         return photoData;
