@@ -1,5 +1,4 @@
 version: 2.1
-
 jobs:
   build-and-test:
     docker:
@@ -12,9 +11,13 @@ jobs:
       - run:
           name: Test
           command: mvn test
+      - run:
+          name: Analyze on SonarCloud
+          command: mvn sonar:sonar -Dsonar.projectKey=$PROJECT_KEY -Dsonar.organization=nevenaprokic-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
 
 orbs:
   heroku: circleci/heroku@1.2.6
+  sonarcloud: sonarsource/sonarcloud@1.0.3
 workflows:
   heroku_deploy:
     jobs:
