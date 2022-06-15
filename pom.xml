@@ -17,7 +17,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<sonar.projectKey>nevenaprokic_spring-back</sonar.projectKey>
-		<sonar.organization>nevenaprokic-github</sonar.organization>
+		<sonar.organization>nevenaprokic</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<dependencies>
