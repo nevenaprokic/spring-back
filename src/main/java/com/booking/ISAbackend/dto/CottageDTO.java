@@ -1,4 +1,4 @@
-package com.booking.ISAbackend.dto;;
+package com.booking.ISAbackend.dto;
 
 import com.booking.ISAbackend.model.AdditionalService;
 import com.booking.ISAbackend.model.Adventure;
