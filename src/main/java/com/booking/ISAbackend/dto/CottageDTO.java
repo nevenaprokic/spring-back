@@ -29,7 +29,7 @@ public class CottageDTO {
     private List<AdditionalServiceDTO> additionalServices;
     private Double mark;
 
-
+//
     public CottageDTO(Integer id,String name, String description, Double price, List<String> photos, Integer numberOfPerson, String rulesOfConduct, String cancellationConditions, Integer roomNumber, Integer bedNumber) {
         this.id = id;
         this.name = name;
