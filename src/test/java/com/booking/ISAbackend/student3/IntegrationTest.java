@@ -1,7 +1,6 @@
 package com.booking.ISAbackend.student3;
 
 import com.booking.ISAbackend.model.ClientCategory;
-import com.booking.ISAbackend.model.OwnerCategory;
 import com.booking.ISAbackend.util.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +12,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.Charset;
@@ -28,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest()
-public class IntegrationTests {
+public class IntegrationTest {
 
     private static final String URL_PREFIX_MARK = "/mark";
     private static final String URL_PREFIX_ADMIN = "/admin";

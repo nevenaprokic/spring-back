@@ -1,19 +1,14 @@
 package com.booking.ISAbackend.student3;
 
 import com.booking.ISAbackend.config.WebConfig;
-import com.booking.ISAbackend.dto.AdventureDTO;
-import com.booking.ISAbackend.dto.NewAdventureDTO;
 import com.booking.ISAbackend.dto.UserProfileData;
-import com.booking.ISAbackend.email.EmailSender;
 import com.booking.ISAbackend.email.EmailService;
 import com.booking.ISAbackend.exceptions.*;
 import com.booking.ISAbackend.model.*;
 import com.booking.ISAbackend.repository.*;
 import com.booking.ISAbackend.service.impl.ClientCategoryServiceImpl;
-import com.booking.ISAbackend.service.impl.ClientServiceImpl;
 import com.booking.ISAbackend.service.impl.InstructorServiceImpl;
 import com.booking.ISAbackend.service.impl.UserServiceImpl;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -26,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -39,7 +33,7 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest
 @WebAppConfiguration
 @ContextConfiguration(classes = WebConfig.class)
-public class UnitTests {
+public class UnitTest {
 
     @Mock
     ClientCategoryRepository clientCategoryRepository;

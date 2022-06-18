@@ -30,7 +30,7 @@ import java.util.Optional;
 @SpringBootTest
 @WebAppConfiguration
 @ContextConfiguration(classes = WebConfig.class)
-public class UnitTests {
+public class UnitTest {
 
     @InjectMocks
     ReservationReportServiceImpl reservationReportService;
