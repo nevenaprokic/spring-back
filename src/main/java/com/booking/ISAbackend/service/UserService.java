@@ -1,7 +1,9 @@
 package com.booking.ISAbackend.service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import com.booking.ISAbackend.dto.*;
 import com.booking.ISAbackend.exceptions.*;
@@ -19,7 +21,7 @@ public interface UserService {
     void changeInstrctorData(InstructorNewDataDTO newData) throws OnlyLettersAndSpacesException, InvalidPhoneNumberException, InvalidAddressException;
     void addNewAdmin(UserProfileData data) throws OnlyLettersAndSpacesException, InvalidPhoneNumberException, InvalidAddressException, AlreadyExitingUsernameException;
 
-    CottageOwner findCottageOwnerByEmail(String email);
+    Optional<CottageOwner> findCottageOwnerByEmail(String email);
 
     Boolean isOldPasswordCorrect(String email, HashMap<String, String> data) throws InvalidPasswordException;
     ShipOwner findShipOwnerByEmail(String email);
@@ -41,5 +43,14 @@ public interface UserService {
     void deleteAccount(String response, int clientId, int deleteRequestId);
     void rejectDeleteAccountRequest(String response, int userId, int deleteRequestId);
 
+    List<UserDTO> getAllActiveShipOwners(int page, int pageSize);
+    List<UserDTO> getAllActiveCottageOwners(int page, int pageSize);
+    List<UserDTO> getAllActiveInstructors(int page, int pageSize);
+    List<UserDTO> getAllActiveAdmins(int page, int pageSize,String currentAdmin);
+
+    void deleteInstructor(int userId) throws IOException, OfferNotFoundException, AccountDeletionException, InterruptedException;
+    void deleteCottageOwner(int userId) throws IOException, OfferNotFoundException, AccountDeletionException, InterruptedException;
+    void deleteShipOwner(int userId) throws IOException, OfferNotFoundException, AccountDeletionException, InterruptedException;
+    void deleteAdmin(int userId);
 
 }

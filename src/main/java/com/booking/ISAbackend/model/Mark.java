@@ -12,6 +12,7 @@ public class Mark {
 	private String comment;
 	private Boolean approved;
 	private LocalDate sendingTime;
+	private Boolean reviewed;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "my_user_id")
@@ -20,6 +21,10 @@ public class Mark {
 	@ManyToOne(fetch = FetchType.LAZY, cascade={CascadeType.DETACH,CascadeType.REFRESH})
 	@JoinColumn(name = "reservation_id")
 	private Reservation reservation;
+
+	@Version
+	@Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+	private Long version;
 
 	public Mark(){}
 
@@ -30,13 +35,14 @@ public class Mark {
 		this.reservation = reservation;
 		this.client = client;
 	}
-	public Mark(Integer mark, String comment, Boolean approved, Reservation reservation, Client client, LocalDate sendingTime) {
+	public Mark(Integer mark, String comment, Boolean approved, Reservation reservation, Client client, LocalDate sendingTime, Boolean reviewed) {
 		this.mark = mark;
 		this.comment = comment;
 		this.approved = approved;
 		this.reservation = reservation;
 		this.client = client;
 		this.sendingTime = sendingTime;
+		this.reviewed = reviewed;
 	}
 
 	public Integer getId() {
@@ -86,4 +92,8 @@ public class Mark {
 	public void setReservation(Reservation reservation) {
 		this.reservation = reservation;
 	}
+
+	public boolean getReviewed() {return reviewed;}
+
+	public void setReviewed(boolean reviewed) { this.reviewed = reviewed;}
 }

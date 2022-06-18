@@ -11,9 +11,10 @@ public interface EmailSender {
     void reservationConfirmation(ReservationParamsDTO params) throws MailException;
     void notifySubscribersNewQuickReservation(String email, String offerName, String date);
     void notifyClientNewReservation(String email, Reservation reservation);
-    void notifyCliendDiscardMark(String email, String message);
+    void notifyUserAboutMark(String email, String message);
     void notifyNewAdmin(String emeil, String message);
     void notifyUserAboutReservationReport(String email, String message);
     void sendResponseOnComplaint(String email, String message);
-    void notifyUserForDeleteAccountResponse(String email, String message);
+    void notifyUserForDeleteAccount(String email, String message);
+    void notifyClientDeleteOffer(String clientEmail, String offerName);
 }

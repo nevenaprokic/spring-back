@@ -3,9 +3,7 @@ package com.booking.ISAbackend.controller;
 
 import com.booking.ISAbackend.dto.CottageOwnerNewDataDTO;
 import com.booking.ISAbackend.dto.CottageOwnerProfileInfoDTO;
-import com.booking.ISAbackend.exceptions.InvalidAddressException;
-import com.booking.ISAbackend.exceptions.InvalidPhoneNumberException;
-import com.booking.ISAbackend.exceptions.OnlyLettersAndSpacesException;
+import com.booking.ISAbackend.exceptions.*;
 import com.booking.ISAbackend.service.RegistrationRequestService;
 import com.booking.ISAbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +55,21 @@ public class CottageOwnerController {
                 return ResponseEntity.status(400).body("Unable to send request to delete the order, user's offers have reservations.");
         } catch (Exception e) {
             return ResponseEntity.status(400).body("Unable to send request to delete the order.");
+        }
+    }
+
+    @DeleteMapping("delete-cottage-owner/{userId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> deleteCottageOwner(@PathVariable("userId") int userId){
+        try{
+            userService.deleteCottageOwner(userId);
+            return ResponseEntity.ok("Successfully deleted account");
+        } catch (AccountDeletionException | OfferNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(e.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(400).body("Something went wrong please try again");
         }
     }
 

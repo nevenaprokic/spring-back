@@ -86,7 +86,7 @@ public class ReservationReportServiceImpl implements ReservationReportService {
         Boolean automaticallyPenal = false;
         if(!dto.getValueShowUp())
             automaticallyPenal = true;
-            if(client.isPresent()){
+            if(client.isPresent() && reservation.isPresent()){
                 addPenalToClient(client.get());
             }
         if(client.isPresent() && reservation.isPresent()){
@@ -102,6 +102,7 @@ public class ReservationReportServiceImpl implements ReservationReportService {
         int penals = client.getPenal();
         penals +=1 ;
         client.setPenal(penals);
+        clientRepository.save(client);
     }
 
     @Override

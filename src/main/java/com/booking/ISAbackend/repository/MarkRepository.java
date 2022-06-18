@@ -11,13 +11,13 @@ import java.util.Optional;
 
 @Repository
 public interface MarkRepository extends JpaRepository<Mark, Integer>{
-    @Query("SELECT m FROM Mark m INNER JOIN Reservation r ON m.reservation.id = r.id INNER JOIN Offer o ON o.id = r.offer.id AND o.id = ?1")
+    @Query("SELECT m FROM Mark m INNER JOIN Reservation r ON m.reservation.id = r.id INNER JOIN Offer o ON o.id = r.offer.id AND o.id = ?1 WHERE m.approved = true")
     List<Mark> findAllMarkByOfferId(Integer idOffer);
 
     @Query("SELECT m FROM Mark m WHERE m.client.id=?1 AND m.reservation.id=?2")
     Optional<Mark> alreadyReviewed(Integer clientId, Integer reservationId);
 
-    @Query("SELECT m FROM  Mark m WHERE  m.approved = false" +"")
+    @Query("SELECT m FROM  Mark m WHERE  m.reviewed=false ")
     List<Mark> findAllNotApproved(Sort sendingTime);
 
     Mark findById(Long markId);

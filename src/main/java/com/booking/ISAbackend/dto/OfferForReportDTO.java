@@ -4,6 +4,8 @@ public class OfferForReportDTO {
     private String offerName;
     private Integer numberOfReservation;
     private Double totalPrice;
+    private Double realPrice;
+    private double earningPercent;
 
     public OfferForReportDTO(){}
 
@@ -11,6 +13,14 @@ public class OfferForReportDTO {
         this.offerName = offerName;
         this.numberOfReservation = numberOgReservation;
         this.totalPrice = totalPrice;
+    }
+
+    public OfferForReportDTO(String offerName, Integer numberOgReservation, Double totalPrice, Double realPrice, Double earningPercent) {
+        this.offerName = offerName;
+        this.numberOfReservation = numberOgReservation;
+        this.totalPrice = totalPrice;
+        this.realPrice = realPrice;
+        this.earningPercent = earningPercent;
     }
 
     public String getOfferName() {
@@ -35,5 +45,21 @@ public class OfferForReportDTO {
 
     public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public Double getRealPrice() {
+        return realPrice;
+    }
+
+    public double getEarningPercent() {
+        return earningPercent;
+    }
+
+    public void setRealPrice(Double realPrice) {
+        this.realPrice = realPrice;
+    }
+
+    public void setEarningPercent(double earningPercent) {
+        this.earningPercent = earningPercent;
     }
 }

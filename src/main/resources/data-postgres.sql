@@ -217,16 +217,16 @@ insert into reservation(deleted,end_date,number_of_person,price,start_date,my_us
 insert into reservation(deleted,end_date,number_of_person,price,start_date,my_user_id,offer_id) values (false,'2022-05-08',2,300,'2022-05-06',1,2);
 
 /*MARK*/
-insert into mark(approved, comment, mark, reservation_id, sending_time) values (false,'Odlican ambijent!',5,3, '2022-05-09');
-insert into mark(approved, comment, mark, reservation_id, sending_time) values (false ,'Onako!',3,18, '2022-04-29');
-insert into mark(approved, comment, mark, reservation_id, sending_time) values (false ,'Nista posebno!',4,6, '2022-05-31');
-insert into mark(approved, comment, mark, reservation_id, sending_time) values (true,'okej!',4,10, '2022-05-19');
-insert into mark(approved, comment, mark, reservation_id, sending_time) values (true,'Odlican ambijent!',5,11, '2022-05-09');
+insert into mark(approved, comment, mark, reservation_id, sending_time, reviewed) values (false,'Odlican ambijent!',5,3, '2022-05-09', false);
+insert into mark(approved, comment, mark, reservation_id, sending_time, reviewed) values (false ,'Onako!',3,18, '2022-04-29', false);
+insert into mark(approved, comment, mark, reservation_id, sending_time, reviewed) values (false ,'Nista posebno!',4,6, '2022-05-31', false);
+insert into mark(approved, comment, mark, reservation_id, sending_time, reviewed) values (true,'okej!',4,10, '2022-05-19', true);
+insert into mark(approved, comment, mark, reservation_id, sending_time, reviewed) values (true,'Odlican ambijent!',5,11, '2022-05-09', true);
 
-insert into mark(approved, comment, mark, reservation_id, sending_time) values (true,'Lep provod, nije dobar ambijent!',4,12, '2022-04-09');
-insert into mark(approved, comment, mark, reservation_id, sending_time) values (true,'Odlican avantura!',5,14, '2022-05-01');
-insert into mark(approved, comment, mark, reservation_id, sending_time) values (true,'Sjajno!',5,15, '2022-05-26');
-insert into mark(approved, comment, mark, reservation_id, sending_time) values (true,'Nista posebno!',3,16, '2022-05-27');
+insert into mark(approved, comment, mark, reservation_id, sending_time, reviewed) values (true,'Lep provod, nije dobar ambijent!',4,12, '2022-04-09', true);
+insert into mark(approved, comment, mark, reservation_id, sending_time, reviewed) values (true,'Odlican avantura!',5,14, '2022-05-01', true);
+insert into mark(approved, comment, mark, reservation_id, sending_time, reviewed) values (true,'Sjajno!',5,15, '2022-05-26', true);
+insert into mark(approved, comment, mark, reservation_id, sending_time, reviewed) values (true,'Nista posebno!',3,16, '2022-05-27', true);
 
 /*DELETE REQUEST*/
 insert into delete_request(description, my_user_id, deleted) values('Ne zelim vise da poslujem!',7, false);

@@ -7,6 +7,7 @@ import com.booking.ISAbackend.service.ReservationReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -103,7 +104,7 @@ public class ReservationReportController {
     public ResponseEntity<List<ReservationReportAdminDTO>> getAllNotReviewedReports(){
         try{
             List<ReservationReportAdminDTO> reports = reservationReportService.getAllNotReviewedWIthPenaltyOption();
-            return new ResponseEntity<>(reports, reports.size() != 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(reports, HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -116,6 +117,8 @@ public class ReservationReportController {
         try{
             reservationReportService.addPenaltyToClient(reportId);
             return ResponseEntity.ok().body("Successfully added penalty to client");
+        }catch (ObjectOptimisticLockingFailureException ex){
+            return ResponseEntity.status(400).body("The other admin has just responded to this report request so you can't.");
         }catch(Exception e){
             return  ResponseEntity.status(400).body("Something went wrong. Please try again");
         }
@@ -127,8 +130,9 @@ public class ReservationReportController {
         try{
             reservationReportService.rejectPenaltyOption(reportId);
             return ResponseEntity.ok().body("Successfully rejected penalty option to client");
+        }catch (ObjectOptimisticLockingFailureException ex){
+            return ResponseEntity.status(400).body("The other admin has just responded to this report request so you can't.");
         }catch(Exception e){
-            e.printStackTrace();
             return  ResponseEntity.status(400).body("Something went wrong. Please try again");
         }
     }

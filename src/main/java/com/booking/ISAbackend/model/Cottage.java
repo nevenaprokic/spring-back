@@ -46,4 +46,5 @@ public class Cottage extends Offer{
 		this.bedNumber = bedNumber;
 		this.cottageOwner = cottageOwner;
 	}
+
 }

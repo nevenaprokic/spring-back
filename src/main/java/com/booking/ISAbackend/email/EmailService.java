@@ -19,24 +19,16 @@ public class EmailService implements EmailSender{
     @Autowired
     private JavaMailSender javaMailSender;
 
-    /*
-     * Koriscenje klase za ocitavanje vrednosti iz application.properties fajla
-     */
     @Autowired
     private Environment env;
 
-    /*
-     * Anotacija za oznacavanje asinhronog zadatka
-     * Vise informacija na: https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#scheduling
-     */
     @Async
-    public void sendConfirmationAsync(String email, String token) throws MailException, InterruptedException {
-
+    public void sendConfirmationAsync(String email, String token) throws MailException {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(email);
         mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
-        mail.setSubject("Primer slanja emaila pomoću asinhronog Spring taska");
-        String link = "http://localhost:8081/confirmation?token=" + token;
+        mail.setSubject("Primer slanja emaila pomoću Spring taska");
+        String link = "https://spring-back-isa-mrs.herokuapp.com/confirmation?token=" + token;
         mail.setText("Pozdrav hvala što pratiš ISA, aktiviraj svoj account na " + link + ".");
         javaMailSender.send(mail);
 
@@ -91,17 +83,17 @@ public class EmailService implements EmailSender{
         javaMailSender.send(mail);
     }
 
-    @Override
-    public void notifyCliendDiscardMark(String email, String message) {
+    @Async
+    public void notifyUserAboutMark(String email, String message) {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(email);
         mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
-        mail.setSubject("Review rejected");
+        mail.setSubject("Review information");
         mail.setText(message);
         javaMailSender.send(mail);
     }
 
-    @Override
+    @Async
     public void notifyNewAdmin(String email, String password) {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(email);
@@ -113,7 +105,7 @@ public class EmailService implements EmailSender{
         javaMailSender.send(mail);
     }
 
-    @Override
+    @Async
     public void notifyUserAboutReservationReport(String email, String message) {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(email);
@@ -123,7 +115,7 @@ public class EmailService implements EmailSender{
         javaMailSender.send(mail);
     }
 
-    @Override
+    @Async
     public void sendResponseOnComplaint(String email, String message) {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(email);
@@ -133,13 +125,23 @@ public class EmailService implements EmailSender{
         javaMailSender.send(mail);
     }
 
-    @Override
-    public void notifyUserForDeleteAccountResponse(String email, String message) {
+    @Async
+    public void notifyUserForDeleteAccount(String email, String message) {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(email);
         mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
         mail.setSubject("Response on delete account request");
         mail.setText(message);
+        javaMailSender.send(mail);
+    }
+
+    @Async
+    public void notifyClientDeleteOffer(String clientEmail, String offerName){
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(clientEmail);
+        mail.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
+        mail.setSubject("Delete offer");
+        mail.setText("The offer (" + offerName+ ") you subscribed to has been deleted!");
         javaMailSender.send(mail);
     }
 

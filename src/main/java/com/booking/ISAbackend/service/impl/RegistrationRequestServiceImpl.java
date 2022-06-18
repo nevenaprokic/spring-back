@@ -51,7 +51,7 @@ public class RegistrationRequestServiceImpl implements RegistrationRequestServic
             if(myUser == null) {
                 Address address = new Address(request.getStreet(), request.getCity(), request.getState());
                 LocalDate sendingTime = LocalDate.now();
-                RegistrationRequest registrationRequest = new RegistrationRequest(request.getExplanation(), request.getType(), request.getFirstName(), request.getLastName(), request.getPassword(), request.getPhoneNumber(), request.getEmail(), false, sendingTime,  address);
+                RegistrationRequest registrationRequest = new RegistrationRequest(request.getExplanation(), request.getType(), request.getFirstName(), request.getLastName(), passwordEncoder.encode(request.getPassword()), request.getPhoneNumber(), request.getEmail(), false, sendingTime,  address);
                 addressRepository.save(address);
                 registrationRequestRepository.save(registrationRequest);
                 return true;
@@ -64,7 +64,7 @@ public class RegistrationRequestServiceImpl implements RegistrationRequestServic
     @Override
     @Transactional
     public List<OwnerRegistrationRequestDTO> getAll() {
-        List<RegistrationRequest> allRegistrationRequests = registrationRequestRepository.findAll();
+        List<RegistrationRequest> allRegistrationRequests = registrationRequestRepository.findAllNotDeleted();
         List<OwnerRegistrationRequestDTO> requestDTOS = new ArrayList<OwnerRegistrationRequestDTO>();
         for(RegistrationRequest request : allRegistrationRequests){
             if(!request.getDeleted()) {

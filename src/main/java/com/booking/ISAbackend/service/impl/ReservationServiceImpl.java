@@ -84,7 +84,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         offer.setNumberOfReservations(offer.getNumberOfReservations() + 1);
         Reservation r = new Reservation(params.getDate(), params.getEndingDate(), ys, params.getTotal(), params.getGuests(), offer, user, false);
-        Thread.sleep(r.getClient().getPenal() * 3000L);
+
         reservationRepository.save(r);
     }
 
@@ -148,12 +148,6 @@ public class ReservationServiceImpl implements ReservationService {
         Offer offer = offerRepository.findOfferById(dto.getOfferId());
         Client client = clientRepository.findByEmail(dto.getClientUserName());
 
-//        List<AdditionalService> newAdditionalService = new ArrayList<>();
-//        for(AdditionalService a: dto.getServices()){
-//            AdditionalService additionalService = additionalServiceRepository.save(new AdditionalService(a.getName(),a.getPrice()));
-//            newAdditionalService.add(additionalService);
-//        }
-
         List<Optional<AdditionalService>> services = new ArrayList<>();
         for(AdditionalService s : dto.getServices()){
             services.add(additionalServiceRepository.findById(s.getId()));
@@ -166,7 +160,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = new Reservation(startDateReservation, endDateReservation,newAdditionalService, dto.getPrice()*dto.getDaysReservation(), dto.getPeopleNum(), offer, client, false);
         Reservation newReservation = reservationRepository.save(reservation);
         offer.getReservations().add(newReservation);
-        Thread.sleep(client.getPenal()*2000);
+
         offerRepository.save(offer);
         sendEmail(client.getEmail(), reservation);
         return newReservation.getId();
@@ -174,7 +168,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Transactional
     void sendEmail(String client, Reservation reservation){
-        emailSender.notifyClientNewReservation("markoooperic123+++fdf@gmail.com", reservation);
+        emailSender.notifyClientNewReservation(client, reservation);
 
     }
 

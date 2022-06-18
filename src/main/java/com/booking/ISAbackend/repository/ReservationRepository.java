@@ -117,5 +117,25 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
             "INNER JOIN ReservationReport rr ON rr.reservation.id = r.id WHERE r.endDate < ?2 ")
     List<Integer> findReservationWithReportByInstructorEmeil(String ownerEmail, LocalDate today);
 
+    @Query("SELECT r FROM Reservation r INNER JOIN Cottage c ON r.offer.id = c.id INNER JOIN Owner ow ON ow.id = c.cottageOwner.id AND ow.email = ?1 WHERE  r.startDate >= ?2")
+    List<Reservation> findFutureByCottageOwnerEmail(String email, LocalDate today);
+
+    @Query("SELECT r FROM Reservation r INNER JOIN Ship s ON r.offer.id = s.id INNER JOIN Owner ow ON ow.id = s.shipOwner.id  AND ow.email = ?1 WHERE  r.startDate >= ?2")
+    List<Reservation> findFutureByShipOwnerEmail(String email, LocalDate today);
+
+    @Query("SELECT r FROM Reservation r INNER JOIN Adventure a ON r.offer.id = a.id INNER JOIN Owner ow ON ow.id = a.instructor.id AND ow.email = ?1 WHERE  r.startDate >= ?2")
+    List<Reservation> findFutureByInstructorEmail(String email, LocalDate today);
+
+    @Query("SELECT r FROM Reservation  r INNER  JOIN Cottage  c ON r.offer.id = c.id WHERE r.startDate >= ?1 AND r.endDate <= ?2")
+    List<Reservation> findAllPastCottageReservations(LocalDate startDay, LocalDate endDate);
+
+    @Query("SELECT r FROM Reservation  r INNER  JOIN Ship  s ON r.offer.id = s.id WHERE r.startDate >= ?1 AND r.endDate <= ?2")
+    List<Reservation> findAllPastShipReservations(LocalDate startDay, LocalDate endDate);
+
+    @Query("SELECT r FROM Reservation  r INNER  JOIN Adventure  a ON r.offer.id = a.id WHERE r.startDate >= ?1 AND r.endDate <= ?2")
+    List<Reservation> findAllPastAdventureReservations(LocalDate startDay, LocalDate endDate);
+
+    @Query("SELECT r FROM Reservation r WHERE r.deleted = false AND r.offer.id = ?1 AND r.endDate < ?2")
+    List<Reservation> findAllPasedByOfferId(Integer id, LocalDate today);
 
 }

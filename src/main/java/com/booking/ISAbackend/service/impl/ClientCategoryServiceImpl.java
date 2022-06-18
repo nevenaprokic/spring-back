@@ -83,7 +83,7 @@ public class ClientCategoryServiceImpl implements ClientCategoryService {
     }
 
 
-    private boolean checkIntervalOverlaping(ClientCategory category) throws OverlappingCategoryBoundaryException {
+    public boolean checkIntervalOverlaping(ClientCategory category) throws OverlappingCategoryBoundaryException {
         int start = category.getLowLimitPoints();
         int end = category.getHeighLimitPoints();
         String name = category.getName();

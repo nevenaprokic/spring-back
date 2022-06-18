@@ -17,6 +17,7 @@ import java.util.List;
 @RequestMapping("loyalty")
 public class LoyaltyProgramController {
 
+
     @Autowired
     OwnerCategoryService ownerCategoryService;
 
@@ -24,6 +25,7 @@ public class LoyaltyProgramController {
     ClientCategoryService clientCategoryService;
 
     @GetMapping("owner-categories")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'COTTAGE_OWNER','INSTRUCTOR','SHIP_OWNER')")
     public ResponseEntity<List<OwnerCategory>> getAllOwnerCategories(){
         try{
             return ResponseEntity.ok(ownerCategoryService.findAll());
@@ -34,6 +36,7 @@ public class LoyaltyProgramController {
     }
 
     @GetMapping("client-categories")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'CLIENT')")
     public ResponseEntity<List<ClientCategory>> getAllCLinetCategories(){
         try{
             return ResponseEntity.ok(clientCategoryService.findAll());
@@ -43,13 +46,14 @@ public class LoyaltyProgramController {
         }
     }
 
-    @PostMapping("update-client-category")
+    @PutMapping("update-client-category")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> updateLoyaltyClientCategory(@RequestBody ClientCategory updateCategory){
         try {
             clientCategoryService.updateClientCategory(updateCategory);
             return ResponseEntity.ok("Successfully update client category");
         } catch (AutomaticallyChangesCategoryIntervalException e) {
-                return ResponseEntity.status(200).body("Successfully update client category, but other boundaries have been moved so that there is no gap between categories .");
+            return ResponseEntity.status(200).body("Successfully update client category, but other boundaries have been moved so that there is no gap between categories .");
         } catch (ExistingCategoryNameException e) {
             return ResponseEntity.status(400).body("Category with the same name already exits");
         } catch (OverlappingCategoryBoundaryException e) {
@@ -65,7 +69,8 @@ public class LoyaltyProgramController {
         }
     }
 
-    @PostMapping("update-owner-category")
+    @PutMapping("update-owner-category")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> updateLoyaltyOwnerCategory(@RequestBody OwnerCategory updateCategory){
         try {
             ownerCategoryService.updateOwnerCategory(updateCategory);
@@ -88,6 +93,7 @@ public class LoyaltyProgramController {
     }
 
     @PostMapping("add-client-category")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> addClientCategory(@RequestBody ClientCategory clientCategoryData){
         try {
             clientCategoryService.addClientCategory(clientCategoryData);
@@ -110,6 +116,7 @@ public class LoyaltyProgramController {
     }
 
     @PostMapping("add-owner-category")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> addOwnerCategory(@RequestBody OwnerCategory ownerCategoryData){
         try {
             ownerCategoryService.addOwnerCategory(ownerCategoryData);
@@ -131,28 +138,21 @@ public class LoyaltyProgramController {
         }
     }
 
-    @PostMapping(value = "/delete-client-category")
-    public ResponseEntity<String> deleteClientCategory(@RequestBody int id){
+    @DeleteMapping (value = "/delete-client-category/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> deleteClientCategory(@PathVariable("id") int id){
 
-            boolean deleted = clientCategoryService.delete(id);
-            if(deleted) return ResponseEntity.ok("Successfully deleted category");
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        boolean deleted = clientCategoryService.delete(id);
+        if(deleted) return ResponseEntity.ok("Successfully deleted category");
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping(value = "/delete-owner-category")
-    public ResponseEntity<String> deleteOwnerCategory(@RequestBody int id){
+    @DeleteMapping(value = "/delete-owner-category/{is}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> deleteOwnerCategory(@PathVariable("id") int id){
 
         boolean deleted = ownerCategoryService.delete(id);
         if(deleted) return ResponseEntity.ok("Successfully deleted category");
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
-
-//    @DeleteMapping(value = "/delete-client-category/{id}")
-//    //@PreAuthorize()
-//    public ResponseEntity<String> deleteClientCategory(@PathVariable int id){
-//
-//        boolean deleted = clientCategoryService.delete(id);
-//        if(deleted) return ResponseEntity.ok("Successfully deleted category");
-//        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-//    }
 }

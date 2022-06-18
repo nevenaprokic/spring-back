@@ -31,7 +31,6 @@ public class ClientController {
     private ReservationService reservationService;
 
     @PostMapping("registration")
-    @PreAuthorize("hasAuthority('CLIENT')")
     public ResponseEntity<String> addClient(@RequestBody ClientRequest request, UriComponentsBuilder ucBuilder) throws InterruptedException {
 
         ClientDTO existUser = this.clientService.findByEmail(request.getEmail());
@@ -54,9 +53,9 @@ public class ClientController {
 
     @PostMapping("update-profile-info")
     @PreAuthorize("hasAuthority('CLIENT')")
-    public ResponseEntity<String> updateInfo(@RequestParam String email, @RequestBody ClientDTO dto) {
+    public ResponseEntity<String> updateInfo(@RequestBody ClientDTO dto) {
         try{
-            clientService.updateInfo(email, dto);
+            clientService.updateInfo(dto.getEmail(), dto);
             return ResponseEntity.ok("Successfully updated personal info");
         } catch (OnlyLettersAndSpacesException | InvalidPhoneNumberException | InvalidAddressException e) {
 
@@ -75,9 +74,9 @@ public class ClientController {
         }
     }
 
-    @GetMapping("deletion-requested")
+    @GetMapping("deletion-requested/{email}")
     @PreAuthorize("hasAuthority('CLIENT')")
-    public ResponseEntity<Boolean> alreadyRequestedDeletion(@RequestParam String email){
+    public ResponseEntity<Boolean> alreadyRequestedDeletion(@PathVariable("email") String email){
         return ResponseEntity.ok(clientService.alreadyRequestedDeletion(email));
     }
 
@@ -202,12 +201,25 @@ public class ClientController {
         try{
             Integer reservationId = Integer.parseInt(data.get("reservationId"));
             clientService.makeComplaint(reservationId, data.get("comment"), data.get("email"));
-            //return ResponseEntity.ok("Complaint has been successfully added.");
             return new ResponseEntity<String>("Complaint has been successfully added.", HttpStatus.CREATED);
         }catch (FeedbackAlreadyGivenException e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return ResponseEntity.status(400).body("Something went wrong.");
+        }
+    }
+
+
+    @DeleteMapping("delete-client/{userId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> deleteClient(@PathVariable("userId") int userId){
+        try{
+            clientService.deleteClient(userId);
+            return ResponseEntity.ok("Successfully deleted account");
+        } catch (AccountDeletionException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }catch (Exception e){
+            return ResponseEntity.status(400).body("Something went wrong please try again");
         }
     }
 }

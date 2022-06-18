@@ -8,6 +8,8 @@ import com.booking.ISAbackend.exceptions.*;
 import com.booking.ISAbackend.service.CottageService;
 import com.booking.ISAbackend.service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -22,7 +24,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("cottage")
-public class CottageController {
+public class
+CottageController {
     @Autowired
     private CottageService cottageService;
     @Autowired
@@ -53,15 +56,13 @@ public class CottageController {
     }
 
     @GetMapping("get-all")
-    public ResponseEntity<List<CottageDTO>> getCottages() throws IOException {
-        List<CottageDTO> cottages = cottageService.findAll();
-        return ResponseEntity.ok(cottages);
-//        try{
-//            List<CottageDTO> cottages = cottageService.findAll();
-//            return ResponseEntity.ok(cottages);
-//        }catch  (Exception e){
-//            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-//        }
+    public ResponseEntity<List<CottageDTO>> getCottages() {
+        try{
+            List<CottageDTO> cottages = cottageService.findAll();
+            return ResponseEntity.ok(cottages);
+        }catch  (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("search")
@@ -144,7 +145,7 @@ public class CottageController {
         }
     }
     @GetMapping("allowed-operation")
-    @PreAuthorize("hasAuthority('COTTAGE_OWNER')")
+    @PreAuthorize("hasAnyAuthority('COTTAGE_OWNER', 'ADMIN')")
     public ResponseEntity<Boolean> isAllowedCottageOperation(@RequestParam Integer cottageId){
         try{
             Boolean allowedOperation = offerService.checkOperationAllowed(cottageId);
@@ -157,7 +158,7 @@ public class CottageController {
     }
 
     @DeleteMapping("delete")
-    @PreAuthorize("hasAuthority('COTTAGE_OWNER')")
+    @PreAuthorize("hasAnyAuthority('COTTAGE_OWNER', 'ADMIN')")
     public ResponseEntity<String> deleteCottage(@RequestParam Integer cottageId){
         try{
             offerService.delete(cottageId);
@@ -165,6 +166,8 @@ public class CottageController {
         }catch (OfferNotFoundException e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body(e.getMessage());
+        }catch (ObjectOptimisticLockingFailureException ex){
+            return ResponseEntity.status(400).body("Someone has made reservation for this offer at the same time. You can't make change.");
         }catch(Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body("Something went wrong, please try again.");
@@ -195,6 +198,17 @@ public class CottageController {
             cottageService.updateCottageAdditionalServices(additionalServiceDTOS, id);
             return ResponseEntity.ok().body("Successfully change cottage");
         }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("all-by-pages")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<CottageDTO>> getCottages(@RequestParam int page, @RequestParam int pageSize){
+        try{
+            List<CottageDTO> cottages = cottageService.findAllByPages(page, pageSize);
+            return ResponseEntity.ok(cottages);
+        }catch  (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

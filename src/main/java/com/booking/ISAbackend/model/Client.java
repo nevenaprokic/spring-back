@@ -30,11 +30,6 @@ public class Client extends MyUser {
         this.subscribedOffers = subscribedOffers;
     }
 
-//    public ClientCategory getClientCategory() {
-//        return clientCategory;
-//    }
-
-
     public Integer getPoints() {return points;}
 
     public Integer getPenal() {
@@ -44,10 +39,6 @@ public class Client extends MyUser {
     public List<Offer> getSubscribedOffers() {
         return subscribedOffers;
     }
-
-//    public void setClientCategory(ClientCategory clientCategory) {
-//        this.clientCategory = clientCategory;
-//    }
 
     public void setPoints(Integer points) { this.points = points; }
 

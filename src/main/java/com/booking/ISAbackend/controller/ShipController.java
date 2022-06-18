@@ -8,8 +8,10 @@ import com.booking.ISAbackend.exceptions.*;
 import com.booking.ISAbackend.service.OfferService;
 import com.booking.ISAbackend.service.ShipService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,6 +53,7 @@ public class ShipController {
         }
 
     }
+
     @GetMapping("search-by-owner")
     @PreAuthorize("hasAuthority('SHIP_OWNER')")
     public ResponseEntity<List<ShipDTO>> searchShipByShipOwner(@RequestParam String name, @RequestParam String address, @RequestParam Integer maxPeople, @RequestParam Double price, @RequestParam String shipOwnerUsername){
@@ -62,6 +65,7 @@ public class ShipController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+
     @PostMapping("add")
     @PreAuthorize("hasAuthority('SHIP_OWNER')")
     public ResponseEntity<String> addShip(@RequestParam("email") String ownerEmail,
@@ -146,7 +150,7 @@ public class ShipController {
     }
 
     @GetMapping("allowed-operation")
-    @PreAuthorize("hasAuthority('SHIP_OWNER')")
+    @PreAuthorize("hasAnyAuthority('SHIP_OWNER', 'ADMIN')")
     public ResponseEntity<Boolean> isAllowedShipOperation(@RequestParam Integer shipId){
         try{
             Boolean allowedOperation = offerService.checkOperationAllowed(shipId);
@@ -158,7 +162,7 @@ public class ShipController {
     }
 
     @DeleteMapping("delete")
-    @PreAuthorize("hasAuthority('SHIP_OWNER')")
+    @PreAuthorize("hasAnyAuthority('SHIP_OWNER', 'ADMIN')")
     public ResponseEntity<String> deleteShip(@RequestParam Integer shipId){
         try{
             offerService.delete(shipId);
@@ -166,6 +170,8 @@ public class ShipController {
         }catch (OfferNotFoundException e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body(e.getMessage());
+        }catch (ObjectOptimisticLockingFailureException ex){
+            return ResponseEntity.status(400).body("Someone has made reservation for this offer at the same time. You can't make change.");
         }catch(Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body("Something went wrong, please try again.");
@@ -177,6 +183,8 @@ public class ShipController {
         try{
             shipService.updateShip(newShipData, newShipData.getId());
             return ResponseEntity.ok().body("Successfully update ship.");
+        }catch (ObjectOptimisticLockingFailureException ex){
+            return ResponseEntity.status(400).body("Someone has made reservation for this offer at the same time. You can't make change.");
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -194,6 +202,18 @@ public class ShipController {
             shipService.updateShipAdditionalServices(additionalServiceDTOS, id);
             return ResponseEntity.ok().body("Successfully change ship");
         }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("all-by-pages")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<ShipDTO>> getShips(@RequestParam int page, @RequestParam int pageSize){
+        try{
+            List<ShipDTO> ships = shipService.findAllByPages(page, pageSize);
+            return ResponseEntity.ok(ships);
+        }catch  (Exception e){
+
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

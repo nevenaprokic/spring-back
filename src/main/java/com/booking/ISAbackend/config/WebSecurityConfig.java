@@ -90,15 +90,14 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/foo").permitAll()		// /api/foo
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .antMatchers("/calendar/**").hasAnyAuthority("COTTAGE_OWNER","INSTRUCTOR","SHIP_OWNER")
-                .antMatchers("/client/**").hasAnyAuthority( "CLIENT","ADMIN", "COTTAGE_OWNER","INSTRUCTOR","SHIP_OWNER")
                 .antMatchers("/cottage-owner/**").hasAnyAuthority("COTTAGE_OWNER","ADMIN")
-                .antMatchers("/loyalty/**").hasAuthority("ADMIN")
-                .antMatchers("/mark/**").hasAnyAuthority("ADMIN", "COTTAGE_OWNER","INSTRUCTOR","SHIP_OWNER")
+                .antMatchers("/loyalty/**").hasAnyAuthority("CLIENT","ADMIN", "COTTAGE_OWNER","INSTRUCTOR","SHIP_OWNER")
+                .antMatchers("/mark/**").hasAnyAuthority("ADMIN", "COTTAGE_OWNER","INSTRUCTOR","SHIP_OWNER", "CLIENT")
                 .antMatchers("/registration-request/**").hasAuthority("ADMIN")
                 .antMatchers("/reservation/**").hasAnyAuthority("CLIENT", "COTTAGE_OWNER","INSTRUCTOR","SHIP_OWNER")
                 .antMatchers("/reservation-report/**").hasAnyAuthority("ADMIN", "COTTAGE_OWNER","INSTRUCTOR","SHIP_OWNER")
                 .antMatchers("/ship-owner/**").hasAnyAuthority("SHIP_OWNER","ADMIN")
-                .antMatchers("/user/**").hasAnyAuthority("ADMIN", "COTTAGE_OWNER","INSTRUCTOR","SHIP_OWNER","CLIENT")
+                .antMatchers("/adventure/**").hasAnyAuthority("INSTRUCTOR","ADMIN")
 
                 // ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
                 // koji tip korisnika moze da pristupi odgovarajucoj ruti. Npr. ukoliko zelimo da definisemo da ruti 'admin' moze da pristupi
@@ -126,7 +125,8 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Dozvoljena POST metoda na ruti /auth/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
         web.ignoring().antMatchers(HttpMethod.POST, "/auth/login");
-        web.ignoring().antMatchers(HttpMethod.POST, "/auth/client/registration");
+        web.ignoring().antMatchers(HttpMethod.POST, "/client/registration");
+        web.ignoring().antMatchers(HttpMethod.POST, "/user/registration-owner");
         web.ignoring().antMatchers(HttpMethod.GET,"/cottage/get-all");
         web.ignoring().antMatchers(HttpMethod.GET,"/cottage/get-info");
         web.ignoring().antMatchers(HttpMethod.GET,"/cottage/search");
@@ -138,6 +138,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(HttpMethod.GET,"/instructor/search");
         web.ignoring().antMatchers(HttpMethod.GET,"/quick-reservation/get");
         web.ignoring().antMatchers(HttpMethod.GET,"/address/get-info");
+        web.ignoring().antMatchers(HttpMethod.GET,"/confirmation");
 
         // Ovim smo dozvolili pristup statickim resursima aplikacije
         web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "favicon.ico", "/**/*.html",

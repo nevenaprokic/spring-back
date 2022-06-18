@@ -19,4 +19,8 @@ public class CottageOwner extends Owner{
 	public List<Cottage> getCottages() {
 		return cottages;
 	}
+
+	public void setCottages(List<Cottage> cottages) {
+		this.cottages = cottages;
+	}
 }

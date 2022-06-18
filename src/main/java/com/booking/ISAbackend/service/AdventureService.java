@@ -33,4 +33,5 @@ public interface AdventureService {
     List<Adventure> nonAvailableAdventures(LocalDate date);
 
     List<Adventure> getInstructorsAdventuresById(Integer id) throws IOException;
+    List<AdventureDTO> findAll(int page, int pageSize) throws IOException;
 }

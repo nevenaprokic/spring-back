@@ -2,22 +2,26 @@ package com.booking.ISAbackend.service.impl;
 
 import com.booking.ISAbackend.dto.AdditionalServiceDTO;
 import com.booking.ISAbackend.dto.AddressDTO;
+import com.booking.ISAbackend.dto.BusinessReportDTO;
+import com.booking.ISAbackend.dto.OfferForReportDTO;
 import com.booking.ISAbackend.exceptions.OfferNotFoundException;
+import com.booking.ISAbackend.exceptions.UserNotFoundException;
 import com.booking.ISAbackend.model.*;
 import com.booking.ISAbackend.repository.OfferRepository;
+import com.booking.ISAbackend.repository.OwnerCategoryRepository;
 import com.booking.ISAbackend.repository.QuickReservationRepository;
 import com.booking.ISAbackend.repository.ReservationRepository;
-import com.booking.ISAbackend.service.AdditionalServiceService;
-import com.booking.ISAbackend.service.ClientService;
-import com.booking.ISAbackend.service.OfferService;
-import com.booking.ISAbackend.service.PhotoService;
+import com.booking.ISAbackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -34,6 +38,11 @@ public class OfferServiceImpl implements OfferService {
     private AdditionalServiceService additionalServiceService;
     @Autowired
     private ClientService clientService;
+    @Autowired
+    private ReservationReportService reservationReportService;
+    @Autowired
+    private OwnerCategoryRepository ownerCategoryRepository;
+
 
     @Override
     @Transactional
@@ -59,12 +68,19 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     @Transactional
-    public void delete(Integer offerId) throws OfferNotFoundException {
+    @Caching(evict = {
+            @CacheEvict(value="cottages", allEntries=true),
+            @CacheEvict(value="ships", allEntries=true),
+            @CacheEvict(value="instructors", allEntries=true)})
+    public void delete(Integer offerId) throws OfferNotFoundException, InterruptedException {
         Offer offer = offerRepository.findOfferById(offerId);
+        offer.setNumberOfModify(offer.getNumberOfModify()+1);
         if (offer == null)
             throw new OfferNotFoundException("Offer not found");
-        if(offer.getSubscribedClients().size()!= 0)
-            clientService.removeSubscribedClients(offer.getSubscribedClients());
+        if(offer.getSubscribedClients().size()!= 0){
+            clientService.removeSubscribedClients(offer.getSubscribedClients(), offerId, offer.getName());
+            offer.getSubscribedClients().clear();
+        }
         if(offer.getPhotos().size() != 0)
             photoService.removeOldPhotos(offer.getPhotos());
         if(offer.getAdditionalServices().size() != 0)
@@ -103,4 +119,64 @@ public class OfferServiceImpl implements OfferService {
         return true;
     }
 
+    @Override
+    @Transactional
+    public BusinessReportDTO getAdminBusinessReportData(String start, String end) throws UserNotFoundException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate startDate = LocalDate.parse(start, formatter);
+        LocalDate endDate = LocalDate.parse(end, formatter);
+
+        List<Reservation> adventuresPastReservations = reservationRepository.findAllPastAdventureReservations(startDate, endDate);
+        List<Reservation> cottagesPastReservations = reservationRepository.findAllPastCottageReservations(startDate, endDate);
+        List<Reservation> shipsPastReservations = reservationRepository.findAllPastShipReservations(startDate, endDate);
+
+        double totalReportPrice = 0;
+        BusinessReportDTO reportData = new BusinessReportDTO();
+        reportData.setTotalIncome(0.0);
+        List<OfferForReportDTO> adventuresForReport = getOfferDataForAdminReport(adventuresPastReservations, reportData);
+        List<OfferForReportDTO> cottagesForReport = getOfferDataForAdminReport(cottagesPastReservations, reportData);
+        List<OfferForReportDTO> shipsForReport = getOfferDataForAdminReport(shipsPastReservations, reportData);
+
+        reportData.setAdventuresIncome(adventuresForReport);
+        reportData.setCottagesIncome(cottagesForReport);
+        reportData.setShipsIncome(shipsForReport);
+
+        return reportData;
+    }
+
+
+    @Transactional
+    public List<OfferForReportDTO> getOfferDataForAdminReport(List<Reservation> reservations, BusinessReportDTO reportData) throws UserNotFoundException{
+
+        HashMap<String, OfferForReportDTO> data = new HashMap<String, OfferForReportDTO>();
+        for(Reservation reservation : reservations){
+
+            Offer offer = reservation.getOffer();
+            Owner owner = reservationReportService.findReservationOwner(reservation);
+            int points = owner.getPoints();
+            OwnerCategory category = ownerCategoryRepository.findByMatchingInterval(points).get(0);
+            double earningSystemPrice = reservation.getPrice() * ((100 - category.getEarningsPercent())/100);
+
+            if(data.containsKey(offer.getName())){
+                OfferForReportDTO offerForReport = data.get(offer.getName());
+                offerForReport.setNumberOfReservation(offerForReport.getNumberOfReservation() + 1);
+                offerForReport.setTotalPrice(offerForReport.getTotalPrice() + earningSystemPrice);
+                offerForReport.setRealPrice(offerForReport.getRealPrice() + reservation.getPrice());
+
+            }
+            else{
+                OfferForReportDTO offerForReport = new OfferForReportDTO(offer.getName(),1, earningSystemPrice);
+                offerForReport.setRealPrice(reservation.getPrice());
+                offerForReport.setEarningPercent(100-category.getEarningsPercent());
+                data.put(offer.getName(), offerForReport);
+            }
+
+            reportData.setTotalIncome(reportData.getTotalIncome() + earningSystemPrice);
+
+            //String offerName, Integer numberOgReservation, Double totalPrice, Double realPrice, Double earningPerce
+
+        }
+        return  new ArrayList<OfferForReportDTO>(data.values());
+    }
 }
+

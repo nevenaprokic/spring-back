@@ -87,4 +87,56 @@ public class NewCottageDTO {
     public String getBedNumber() {
         return bedNumber;
     }
+
+    public void setOwnerEmail(String ownerEmail) {
+        this.ownerEmail = ownerEmail;
+    }
+
+    public void setOfferName(String offerName) {
+        this.offerName = offerName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public void setPhotos(List<MultipartFile> photos) {
+        this.photos = photos;
+    }
+
+    public void setPeopleNum(String peopleNum) {
+        this.peopleNum = peopleNum;
+    }
+
+    public void setRulesOfConduct(String rulesOfConduct) {
+        this.rulesOfConduct = rulesOfConduct;
+    }
+
+    public void setCancelationConditions(String cancelationConditions) {
+        this.cancelationConditions = cancelationConditions;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public void setBedNumber(String bedNumber) {
+        this.bedNumber = bedNumber;
+    }
 }

@@ -30,6 +30,10 @@ public class ShipDTO {
     private String street;
     private String city;
     private String state;
+    private int offerNumber;
+    private String ownerName;
+
+
 
     public ShipDTO(Integer id, String name, String description, Double price, List<String> photos, Integer numberOfPerson, String rulesOfConduct, String cancellationConditions, String type, String size, Integer motorNumber, Integer motorPower, Integer maxSpeed, String navigationEquipment, String additionalEquipment) {
         this.id = id;
@@ -178,4 +182,21 @@ public class ShipDTO {
     public String getState() {
         return state;
     }
+
+    public String getOwnerName(){
+        return ownerName;
+    }
+
+    public void setOwnerName(String name){
+        ownerName  =name;
+    }
+
+    public int getOfferNumber(){
+        return offerNumber;
+    }
+
+    public void setOfferNumber(int shipsNumber){
+        this.offerNumber = shipsNumber;
+    }
+
 }

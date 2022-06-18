@@ -135,16 +135,12 @@ public class CalendarServiceImpl implements CalendarService {
     private boolean isAvailablePeriod(int offerId, LocalDate startDate, LocalDate endDate){
         List<Reservation> reservations = reservationRepository.findAllByOfferId(offerId);
         for(Reservation reservation : reservations){
-            if((reservation.getStartDate().compareTo(startDate) <= 0) && (startDate.compareTo(reservation.getEndDate()) <= 0))
-                return false;
-            if((reservation.getStartDate().compareTo(endDate) <= 0) && (endDate.compareTo(reservation.getEndDate()) <= 0))
+            if(!endDate.isBefore(reservation.getStartDate()) && !reservation.getEndDate().isBefore(startDate))
                 return false;
         }
         List<QuickReservation> quickReservations = quickReservationRepository.findQuickReservationsByOfferId(offerId);
         for(QuickReservation action : quickReservations){
-            if((action.getStartDate().compareTo(startDate) <= 0) && (startDate.compareTo(action.getEndDate()) <= 0))
-                return false;
-            if((action.getStartDate().compareTo(endDate) <= 0) && (endDate.compareTo(action.getEndDate()) <= 0))
+            if(!endDate.isBefore(action.getStartDate()) && !action.getEndDate().isBefore(startDate))
                 return false;
         }
         return true;

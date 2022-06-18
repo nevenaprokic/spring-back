@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface CottageService {
-    List<CottageDTO> findAll() throws IOException;
+    List<CottageDTO> findAll() throws IOException, InterruptedException;
     List<CottageDTO> findCottageByCottageOwnerEmail(String email) throws IOException;
     CottageDTO findCottageById(Integer id) throws IOException;
     Address findAddressByCottageId(Integer id);
@@ -22,4 +22,5 @@ public interface CottageService {
     void addAdditionalServices(List<HashMap<String, String>> additionalServiceDTO, int offerId) throws InvalidPriceException, RequiredFiledException;
     void updateCottage(CottageDTO cottageDTO, Integer cottageId) throws IOException, InvalidPriceException, InvalidRoomNumberException, InvalidBedNumberException, InvalidPeopleNumberException, InvalidAddressException, InterruptedException;
     void updateCottageAdditionalServices(List<HashMap<String, String>> newServices, Integer offerID) throws InvalidPriceException, RequiredFiledException;
+    List<CottageDTO> findAllByPages(int page, int pageSize) throws IOException;
 }

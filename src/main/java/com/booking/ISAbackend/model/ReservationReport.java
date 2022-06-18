@@ -27,6 +27,10 @@ public class ReservationReport {
 	@JoinColumn(name = "client_id")
 	private Client client;
 
+	@Version
+	@Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
+	private Long version;
+
 	public ReservationReport(){
 
 	}

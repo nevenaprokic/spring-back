@@ -35,6 +35,7 @@ public class QuickReservationServiceImpl implements QuickReservationService {
     @Transactional
     public List<QuickReservationDTO> findQuickReservationByOfferId(Integer id){
         List<QuickReservation> listOfAllQuickReservation = quickReservationRepository.findQuickReservationsByOfferId(id);
+
         List<QuickReservation> listOfCurrentQuickReservation = new ArrayList<>();
         LocalDate today = LocalDate.now();
 
@@ -83,15 +84,14 @@ public class QuickReservationServiceImpl implements QuickReservationService {
         QuickReservation newQuickReservation = quickReservationRepository.save(quickReservation);
         offer.getQuickReservations().add(newQuickReservation);
 
-        Thread.sleep(dto.getDaysReservation()*2000);
         offerRepository.save(offer);
         sendEmail(offer, dto.getStartDateAction());
         return newQuickReservation.getId();
     }
     @Transactional
-    void sendEmail(Offer offer, String date){ //treba uraditi pretplacene
-//        for(MyUser u : offer.getSubscribedClients())
-        emailSender.notifySubscribersNewQuickReservation("natasha.lakovic@gmail.com", offer.getName(), date);
+    void sendEmail(Offer offer, String date){
+        for(MyUser u : offer.getSubscribedClients())
+            emailSender.notifySubscribersNewQuickReservation(u.getEmail(), offer.getName(), date);
     }
 
     @Override

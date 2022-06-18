@@ -56,4 +56,6 @@ public class Address {
 	public void setStreet(String street) {
 		this.street = street;
 	}
+
+	public void setId(int id){ this.id = id;}
 }

@@ -27,7 +27,7 @@ public class RegistrationRequestController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-    @PostMapping("accept")
+    @PutMapping("accept")
     public ResponseEntity<List<OwnerRegistrationRequestDTO>> acceptRegistrationRequest(@RequestBody int requestId){
         try{
             registrationRequests.acceptRegistrationRequest(requestId);
@@ -40,7 +40,7 @@ public class RegistrationRequestController {
         }
     }
 
-    @PostMapping("discard")
+    @PutMapping("discard")
     public ResponseEntity<List<OwnerRegistrationRequestDTO>> discardRegistrationRequest(@RequestParam int requestId, @RequestBody  String message){
         try{
             registrationRequests.discardRegistrationRequest(requestId, message);

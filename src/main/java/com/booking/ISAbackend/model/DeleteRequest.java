@@ -27,6 +27,7 @@ public class DeleteRequest {
 	public DeleteRequest(String description, MyUser myUser) {
 		this.description = description;
 		this.myUser = myUser;
+		this.deleted = false;
 	}
 
 	public Integer getId() {
@@ -56,4 +57,6 @@ public class DeleteRequest {
 	public void setMyUser(MyUser myUser) {
 		this.myUser = myUser;
 	}
+
+	public void setId(int id) {this.id = id;}
 }

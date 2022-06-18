@@ -14,6 +14,6 @@ public interface UnavailabelOfferDatesRepository extends JpaRepository<Unavailab
     List<UnavailableOfferDates> findByOfferId(Integer id);
 
     @Query("SELECT u FROM UnavailableOfferDates u WHERE u.offer.id = ?3 AND"  +
-            "(( ?1 >= u.startDate AND ?1 <= u.endDate) OR ( ?2 >= u.startDate AND ?2 <= u.endDate))")
+            "( ?1 <= u.endDate AND ?2 >= u.startDate)")
     List<UnavailableOfferDates> findDatesByOfferInInterval(LocalDate from, LocalDate to, int offerId);
 }

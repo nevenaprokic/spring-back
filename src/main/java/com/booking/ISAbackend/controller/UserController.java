@@ -30,7 +30,6 @@ public class UserController {
 	private RegistrationRequestService registrationRequestService;
 
 	@PostMapping("registration-owner")
-	@PreAuthorize("hasAnyAuthority('COTTAGE_OWNER','INSTRUCTOR','SHIP_OWNER')")
 	public ResponseEntity<String> sendOwnerRegistration(@RequestBody OwnerRegistrationRequestDTO request){
 		try {
 			boolean userIsExists = registrationRequestService.save(request);
@@ -44,6 +43,7 @@ public class UserController {
 	}
 
 	@PostMapping("update-password/{email}")
+	@PreAuthorize("hasAnyAuthority('COTTAGE_OWNER','INSTRUCTOR','SHIP_OWNER', 'ADMIN', 'CLIENT')")
 	public ResponseEntity<String> updatePassword(@PathVariable String email, @RequestBody HashMap<String, String> data) {
 		try {
 			userService.isOldPasswordCorrect(email, data);

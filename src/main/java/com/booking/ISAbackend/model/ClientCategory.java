@@ -102,4 +102,6 @@ public class ClientCategory {
     public void setCategoryColor(String categoryColor) {
         this.categoryColor = categoryColor;
     }
+
+    public void setId(long id) { this.id = id; }
 }

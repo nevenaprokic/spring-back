@@ -3,9 +3,7 @@ package com.booking.ISAbackend.controller;
 
 import com.booking.ISAbackend.dto.ShipOwnerNewDataDTO;
 import com.booking.ISAbackend.dto.ShipOwnerProfileInfoDTO;
-import com.booking.ISAbackend.exceptions.InvalidAddressException;
-import com.booking.ISAbackend.exceptions.InvalidPhoneNumberException;
-import com.booking.ISAbackend.exceptions.OnlyLettersAndSpacesException;
+import com.booking.ISAbackend.exceptions.*;
 import com.booking.ISAbackend.service.RegistrationRequestService;
 import com.booking.ISAbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +54,19 @@ public class ShipOwnerController {
                 return ResponseEntity.status(400).body("Unable to send request to delete the order, user's offers have reservations.");
         } catch (Exception e) {
             return ResponseEntity.status(400).body("Unable to send request to delete the order.");
+        }
+    }
+
+    @DeleteMapping("delete-ship-owner/{userId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> deleteShipOwner(@PathVariable("userId") int userId){
+        try{
+            userService.deleteShipOwner(userId);
+            return ResponseEntity.ok("Successfully deleted account");
+        } catch (AccountDeletionException | OfferNotFoundException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }catch (Exception e){
+            return ResponseEntity.status(400).body("Something went wrong please try again");
         }
     }
 }

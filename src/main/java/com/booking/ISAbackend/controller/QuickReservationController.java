@@ -29,7 +29,6 @@ public class QuickReservationController {
     public ResponseEntity<List<QuickReservationDTO>> getQuickReservationsByOfferId(@RequestParam String id){
         try {
             List<QuickReservationDTO> quickReservations = quickReservationService.findQuickReservationByOfferId(Integer.parseInt(id));
-
             return ResponseEntity.ok(quickReservations);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -77,6 +76,7 @@ public class QuickReservationController {
         try{
             HashMap<String, Object> paramsMap =  (HashMap<String, Object>) data.get("params");
             int id = Integer.parseInt(paramsMap.get("quickId").toString());
+
             List<HashMap<String, String>> additionalServiceDTO = (List<HashMap<String, String>>) paramsMap.get("additionalServiceDTO");
 
             quickReservationService.addAdditionalServices(additionalServiceDTO, id);

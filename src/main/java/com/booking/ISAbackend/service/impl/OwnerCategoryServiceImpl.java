@@ -103,12 +103,8 @@ public class OwnerCategoryServiceImpl implements OwnerCategoryService {
         boolean changedHappend = false;
         for(int i=1; i< categories.size(); i++) {
             OwnerCategory current = categories.get(i);
-            System.out.println("current " + current.getName()+ " " + current.getLowLimitPoints() + " -" + current.getHeighLimitPoints());
-
             OwnerCategory previous = categories.get(i-1);
-            System.out.println("previous " + previous.getName()+ " " + previous.getLowLimitPoints() + " -" + previous.getHeighLimitPoints());
             if (current.getLowLimitPoints() - previous.getHeighLimitPoints() > 1) {
-                System.out.println("TUUUUU");
                 changedHappend = true;
                 //CHILD TO PARENT DODATI
                 if(current.getId().equals(changedCategory.getId())){

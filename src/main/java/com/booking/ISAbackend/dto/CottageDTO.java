@@ -1,4 +1,4 @@
-package com.booking.ISAbackend.dto;
+package com.booking.ISAbackend.dto;;
 
 import com.booking.ISAbackend.model.AdditionalService;
 import com.booking.ISAbackend.model.Adventure;
@@ -28,8 +28,12 @@ public class CottageDTO {
     private String state;
     private List<AdditionalServiceDTO> additionalServices;
     private Double mark;
+    private int offerNumber;
+    private String ownerName;
 
-//
+
+
+
     public CottageDTO(Integer id,String name, String description, Double price, List<String> photos, Integer numberOfPerson, String rulesOfConduct, String cancellationConditions, Integer roomNumber, Integer bedNumber) {
         this.id = id;
         this.name = name;
@@ -141,5 +145,77 @@ public class CottageDTO {
 
     public void setMark(Double mark) {
         this.mark = mark;
+    }
+
+    public String getOwnerName(){
+        return ownerName;
+    }
+
+    public void setOwnerName(String name){
+        ownerName  =name;
+    }
+
+    public int getOfferNumber(){
+        return offerNumber;
+    }
+
+    public void setOfferNumber(int offerNumber){
+        this.offerNumber = offerNumber;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public void setPhotos(List<String> photos) {
+        this.photos = photos;
+    }
+
+    public void setNumberOfPerson(Integer numberOfPerson) {
+        this.numberOfPerson = numberOfPerson;
+    }
+
+    public void setRulesOfConduct(String rulesOfConduct) {
+        this.rulesOfConduct = rulesOfConduct;
+    }
+
+    public void setCancellationConditions(String cancellationConditions) {
+        this.cancellationConditions = cancellationConditions;
+    }
+
+    public void setRoomNumber(Integer roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public void setBedNumber(Integer bedNumber) {
+        this.bedNumber = bedNumber;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public void setAdditionalServices(List<AdditionalServiceDTO> additionalServices) {
+        this.additionalServices = additionalServices;
     }
 }
